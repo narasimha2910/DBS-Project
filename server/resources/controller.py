@@ -19,3 +19,5 @@ class Send(Resource):
         result["name"] = "Hello " + data["name"]
         response = jsonify(result)
         return response
+
+# this is a comment by prajwal
