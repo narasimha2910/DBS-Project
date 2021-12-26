@@ -1,20 +1,23 @@
-import { useEffect, useState } from "react";
-import Form from "./Form";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Hero from "./components/Hero";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import VendorLogin from "./components/VendorLogin";
 function App() {
-  const [msg, setMessage] = useState("test");
-  const testApi = async () => {
-    const response = await fetch("/v1/api/Hello");
-    const data = await response.json();
-    console.log(data);
-    const mesg = data.message;
-    setMessage(mesg);
-  };
-  useEffect(() => testApi(), []);
   return (
-    <div>
-      <h1>{msg}</h1>
-      <Form />
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<VendorLogin />} />
+          <Route path="/index" element={<Hero />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

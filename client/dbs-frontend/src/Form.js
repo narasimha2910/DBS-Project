@@ -19,6 +19,7 @@ function Form() {
             });
             const data = await res.json();
             setName(data.name);
+            console.log("Post api called");
           }}
         >
           Send

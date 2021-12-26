@@ -1,0 +1,57 @@
+.rform {
+  background-color: #a6e3e9;
+  margin: auto;
+  width: 50%;
+  align-content: center;
+  height: 100vh;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding-bottom: 30px;
+  overflow-y: scroll;
+}
+
+#rtop {
+  margin-top: 20px;
+  padding-top: 80px;
+}
+
+.rh1 {
+  background-color: #a6e3e9;
+  color: #0d686d;
+  margin: 0 auto;
+  padding: 15px 30px;
+  width: 30%;
+  justify-items: center;
+}
+
+.rinput {
+  display: block;
+  margin: auto;
+  height: 10%;
+  width: 50%;
+  border-style: none;
+  background-color: #71c9ce;
+  font-size: 2rem;
+  border-radius: 20px;
+  color: #0d686d;
+  align-content: center;
+  padding-left: 18px;
+}
+
+.rbutton {
+  margin: 4rem auto;
+  width: 30%;
+  display: block;
+  border: none;
+  font-size: 3rem;
+  border-radius: 12px;
+  color: #0d686d;
+  background-color: #89c8ce;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+.rbutton:hover {
+  color: #034246;
+  cursor: pointer;
+  background-color: #71c9ce;
+}
