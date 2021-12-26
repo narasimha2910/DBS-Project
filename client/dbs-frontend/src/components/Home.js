@@ -17,9 +17,11 @@ const Home = () => {
       <Link to="/register" style={{ textDecoration: "none" }}>
         <button className={classes.hbutton}>Register</button>
       </Link>
-      <button className={`${classes.link} ${classes.hbutton}`}>
-        For Vendor login click here
-      </button>
+      <Link to="/admin" style={{ textDecoration: "none" }}>
+        <button className={`${classes.link} ${classes.hbutton}`}>
+          For Vendor login click here
+        </button>
+      </Link>
     </>
   );
 };

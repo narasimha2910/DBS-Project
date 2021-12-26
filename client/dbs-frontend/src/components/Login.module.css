@@ -5,6 +5,8 @@
   align-content: center;
   height: 40rem;
   border-radius: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #ltop {
@@ -43,9 +45,17 @@
   border-radius: 12px;
   color: #0d686d;
   background-color: #89c8ce;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 .lbtn:hover {
   color: #034246;
   cursor: pointer;
   background-color: #71c9ce;
+}
+
+#lh2 {
+  padding: 0;
+  background-color: #e3fdfd;
+  text-decoration: double underline;
 }

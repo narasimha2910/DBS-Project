@@ -1,8 +1,9 @@
 * {
-  background-color: #e3fdfd;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
   text-align: center;
+  background-color: #e3fdfd;
+  margin: 0;
 }

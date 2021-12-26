@@ -1,0 +1,27 @@
+.sidebar {
+    float: left;
+    background-color: #b5e8eb;
+    margin-top: 76px;
+    height: 100vh;
+    width: 250px;
+    overflow:scroll;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: fixed;
+    color: #0a565a;
+}
+
+.sul {
+    list-style: none;
+    padding: 60px 0 ;
+    text-align: center;
+}
+
+.sli {
+    margin-bottom: 30px;
+    color: #2e8d94;
+}
+
+.sli:hover {
+    color:#0d4747;
+    cursor: pointer;
+}

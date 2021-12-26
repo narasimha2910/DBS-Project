@@ -1,10 +1,17 @@
 import classes from "./Login.module.css";
 
-const Login = () => {
+const Login = ({heading}) => {
   return (
     <div>
+      {heading && (
+        <h1 id={classes.lh2} className={`${classes.lh1}`}>
+          {heading}
+        </h1>
+      )}
       <form className={classes.loginform}>
-        <h1 id={classes.ltop} className={`${classes.lh1}`}>USER NAME</h1>
+        <h1 id={classes.ltop} className={`${classes.lh1}`}>
+          USER NAME
+        </h1>
         <input
           type="text"
           name="username"
