@@ -1,0 +1,59 @@
+.booking {
+  background-color: #48aab1;
+  width: 90%;
+  height: 80px;
+  margin-top: 1.5rem;
+  margin-left: 3.5rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  align-content: space-between;
+}
+
+.bh1 {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  padding-top: 0rem;
+  padding-bottom: 0;
+  margin-bottom: 0.3rem;
+}
+
+.bp1 {
+  margin: 0 0 0 -5rem;
+}
+
+.bbutton {
+  width: 35%;
+  height: 38px;
+  margin-right: 0.5rem;
+   margin-left: 0.5rem;
+  border: none;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  color: #0d686d;
+  background-color: #b5e8eb;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.bbutton:hover {
+  color: #034246;
+  cursor: pointer;
+  background-color: #72d3d8;
+}
+
+.innerDiv1 {
+  float: left;
+}
+
+.innerDiv2 {
+  padding-top: 1.2rem;
+  margin-right: 0rem;
+  width: 50%;
+  float: right;
+}
+
+.bspan {
+  font-size: 1rem;
+  margin-left: 2rem;
+  padding-top: 10rem;
+}

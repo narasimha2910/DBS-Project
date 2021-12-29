@@ -1,3 +1,4 @@
+import Content from "./Content";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
@@ -9,7 +10,7 @@ const Hero = () => {
       {/* Menu on the left */}
       <Sidebar />
       {/* Content in the center */}
-      <div>Content</div>
+      <Content />
     </div>
   );
 };

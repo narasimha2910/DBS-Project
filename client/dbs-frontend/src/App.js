@@ -5,19 +5,30 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import VendorLogin from "./components/VendorLogin";
+import AuthContextProvider from "./contexts/AuthContext";
+import ProtectedRoute from "./ProtectedRoute";
 function App() {
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<VendorLogin />} />
-          <Route path="/index" element={<Hero />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <div>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<VendorLogin />} />
+            <Route
+              path="/index"
+              element={
+                <ProtectedRoute>
+                  <Hero />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </AuthContextProvider>
   );
 }
 

@@ -1,0 +1,21 @@
+.outer {
+  padding-top: 0;
+  background-color: #b5e8eb;
+  color: #0d4747;
+  width: 1150.39px;
+  height: 593.875px;
+  padding: auto;
+  /* align-content: center; */
+  /* display: flex;
+  flex-direction: column; */
+  /* padding-left: 30px; */
+  margin-left: 272px;
+  margin-top: 6rem;
+  z-index: 100;
+  position: absolute;
+  /* justify-content: center; */
+  overflow: scroll;
+  border-radius: 17px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+

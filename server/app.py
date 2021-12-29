@@ -22,13 +22,14 @@ def Test():
     db.session.commit()
     return {"message": f"Authtoken: {test.authtoken}, is_active: {test.is_active}"}
 
+api.add_resource(Register, '/v1/api/Register')
+api.add_resource(Login, '/v1/api/Login')
+api.add_resource(Logout, '/v1/api/Logout')
 
-# Defining endpoints
-api.add_resource(Hello, '/v1/api/Hello')
-api.add_resource(Send, '/v1/api/Send')
-
+api.add_resource(BookAStation, '/v1/api/Book/<id>')
+api.add_resource(ShowMyBookings, '/v1/api/myBookings')
 
 if __name__ == "__main__":
     from db import db
     db.init_app(app)
-    app.run(debug=True, port=5000)
+    app.run(port=5000)
