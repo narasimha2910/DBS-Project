@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 import classes from "./Navbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
+  const { logout } = useContext(AuthContext);
   return (
     <nav className={classes.navbar}>
       <div className={classes.logo}>
@@ -21,7 +24,12 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faUser} style={{ paddingRight: "10" }} />
             Profile
           </li>
-          <li className={classes.nli}>
+          <li
+            className={classes.nli}
+            onClick={() => {
+              logout();
+            }}
+          >
             <FontAwesomeIcon icon={faPowerOff} style={{ paddingRight: "10" }} />
             Logout
           </li>
