@@ -25,9 +25,28 @@ def Test():
 api.add_resource(Register, '/v1/api/Register')
 api.add_resource(Login, '/v1/api/Login')
 api.add_resource(Logout, '/v1/api/Logout')
+api.add_resource(VendorLogin, '/v1/api/VendorLogin')
 
 api.add_resource(BookAStation, '/v1/api/Book/<id>')
 api.add_resource(ShowMyBookings, '/v1/api/myBookings')
+
+api.add_resource(Payment, '/v1/api/pay/<b_id>')
+
+
+api.add_resource(AddStation, '/v1/api/addStation')
+api.add_resource(ShowMyStations, '/v1/api/showMyStations')
+api.add_resource(ShowVendorBookings, '/v1/api/showVendorBookings')
+api.add_resource(VendorBookingsToday, '/v1/api/showTodayBookings')
+api.add_resource(VendorBookingsThisWeek, '/v1/api/showWeekBookings')
+api.add_resource(VendorBookingsThisMonth, '/v1/api/showMonthBookings')
+api.add_resource(MyProfits, '/v1/api/myProfits')
+api.add_resource(MyProfitsToday, '/v1/api/myProfitsToday')
+api.add_resource(MyProfitsThisWeek, '/v1/api/myProfitsWeek')
+api.add_resource(MyProfitsThisMonth, '/v1/api/myProfitsMonth')
+
+
+# Make sure you send user to payment right after charging is completed booking 
+# Compute amount as (end_time - start_time) * cost_per_hour
 
 if __name__ == "__main__":
     from db import db
