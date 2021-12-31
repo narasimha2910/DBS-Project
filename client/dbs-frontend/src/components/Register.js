@@ -113,3 +113,5 @@ const Register = () => {
 };
 
 export default Register;
+
+// array.map(ele, fid => {<Compnent>})

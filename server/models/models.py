@@ -59,10 +59,11 @@ class Stations(db.Model):
     __tablename__ = "stations"
 
     id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.Integer, primary_key=True)
+    category_id = db.Column(db.Integer)
     categoryid = db.relationship("Category", foreign_keys=category_id, primaryjoin="Stations.category_id==Category.id")
     vendor_id = db.Column(db.Integer)
     vendorid = db.relationship("EVBunk", foreign_keys=vendor_id, primaryjoin="Stations.vendor_id==EVBunk.id")
+    is_available = db.Column(db.Boolean, default=True)
 
 class DriversLicense(db.Model):
     __tablename__ = "drivers_license"
@@ -93,6 +94,8 @@ class Payments(db.Model):
     __tablename__ = "payments"
 
     id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer)
+    bookingid = db.relationship("Booking", foreign_keys=booking_id, primaryjoin="Payments.booking_id==Booking.id")
     payment_status = db.Column(db.String(30))
     status_code = db.Column(db.Integer)
     amount = db.Column(db.Float)
@@ -110,3 +113,13 @@ class Reviews(db.Model):
     vendorid = db.relationship("EVBunk", foreign_keys=vendor_id, primaryjoin="Reviews.vendor_id==EVBunk.id")
     rating = db.Column(db.Integer)
     review = db.Column(db.String(50))
+
+
+
+# /v1/api/pay/<fid>
+# data = request.get_json()
+# OR
+# fid = data["fid"]
+# fid from front end
+# booking_id = Booking.query.filter(Booking.id==fid).first()
+# amount = booking_id.stationid.vendorid.cost_per_kwh
