@@ -1,0 +1,45 @@
+.sidebar {
+    float: left;
+    background-color: #b5e8eb;
+    margin-top: 76px;
+    height: 100vh;
+    width: 250px;
+    overflow:scroll;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: fixed;
+    color: #0a565a;
+}
+
+.active {
+    background-color: #6cb2b6;
+    color: #0d4747;
+}
+
+.sul {
+    list-style: none;
+    padding: 60px 0 ;
+    text-align: center;
+}
+
+.sli {
+    margin-left: 19px;
+    margin-bottom: 30px;
+    color: #2e8d94;
+    padding: 5px;
+    width: 80%;
+    border-radius: 10px;
+}
+
+.sli:hover {
+    color:#0d4747;
+    cursor: pointer;
+}
+
+.sli.active {
+    margin-left: 19px;
+    margin-bottom: 30px;
+    color: #0d4747;
+    padding: 5px;
+    width: 80%;
+    border-radius: 10px;
+}

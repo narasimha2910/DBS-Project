@@ -7,9 +7,16 @@ const AuthContextProvider = ({ children }) => {
 
   const authen = () => {
     const isAuth = localStorage.getItem("isAuth");
+    const isVendorAuth = localStorage.getItem("isVendorAuth");
     if (isAuth) {
       setAuthenticated(true);
-    } else {
+      return "user";
+    }
+    else if (isVendorAuth){
+      setAuthenticated(true);
+      return "vendor";
+    }
+     else {
       setAuthenticated(false);
     }
   };
@@ -44,6 +51,36 @@ const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const vendorLogin = async (user, pass) => {
+    const isVendorAuth = localStorage.getItem("isVendorAuth");
+    if (isVendorAuth) {
+      setAuthenticated(true);
+      return;
+    }
+
+    const data = await fetch("/v1/api/VendorLogin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: user,
+        password: pass,
+      }),
+    });
+    const res = await data.json();
+    console.log(res);
+    if (res.status === true) {
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("isVendorAuth", true);
+      setAuthenticated(true);
+    } else {
+      alert(res.error);
+      //   setAuthenticated(false);
+      //   localStorage.setItem("isAuth", false);
+    }
+  };
+
   const logout = async () => {
     try {
       const data = await fetch("/v1/api/Logout", {
@@ -62,7 +99,7 @@ const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const value = { authenticated, login, logout, authen };
+  const value = { authenticated, login, logout, authen, vendorLogin };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

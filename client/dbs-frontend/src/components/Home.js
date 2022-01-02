@@ -1,16 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import classes from "./Home.module.css";
 import { Link, Navigate } from "react-router-dom";
 const Home = () => {
   const { authenticated, authen } = useContext(AuthContext);
+  const [vendoruse, setVendOrUse] = useState("");
   useEffect(() => {
-    authen();
+    setVendOrUse(authen);
   }, [authen]);
   return (
     <>
       {authenticated ? (
-        <Navigate to="/index" />
+        vendoruse === "user" ? (
+          <Navigate to="/index" />
+        ) : (
+          <Navigate to="/vendor" />
+        )
       ) : (
         <>
           {/* LOGO */}
