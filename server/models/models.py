@@ -49,7 +49,7 @@ class VehicleInfo(db.Model):
     __tablename__ = "vehicle_info"
 
     number_plate = db.Column(db.String(15), primary_key=True)
-    category_id = db.Column(db.Integer, primary_key=True)
+    category_id = db.Column(db.Integer)
     categoryid = db.relationship("Category", foreign_keys=category_id, primaryjoin="VehicleInfo.category_id==Category.id")
     user_id = db.Column(db.Integer)
     userid = db.relationship("User", foreign_keys=user_id, primaryjoin="VehicleInfo.user_id==User.id")
@@ -86,8 +86,9 @@ class Booking(db.Model):
     station_id = db.Column(db.Integer)
     stationid = db.relationship("Stations", foreign_keys=station_id, primaryjoin="Booking.station_id==Stations.id")
     booking_time = db.Column(db.DateTime, default=datetime.now())
+    start_time = db.Column(db.DateTime)
     status = db.Column(db.String(30))
-    # 0-> Ongoing, 1 -> Done , 2 -> Payment failed
+    # 0-> Ongoing, 1 -> Done , 2 -> Discarded/Failed
 
 
 class Payments(db.Model):
@@ -115,6 +116,16 @@ class Reviews(db.Model):
     review = db.Column(db.String(50))
 
 
+class OTP(db.Model):
+    __tablename__ = "otp"
+    otp = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
+    userid = db.relationship("User", foreign_keys=user_id, primaryjoin="OTP.user_id==User.id")
+    is_used = db.Column(db.SmallInteger, default=0)
+    booking_id = db.Column(db.Integer)
+    bookingid = db.relationship("Booking", foreign_keys=booking_id, primaryjoin="OTP.booking_id==Booking.id")
+    wrong_count = db.Column(db.Integer, default=0)
+    created_time = db.Column(db.DateTime, default=datetime.now())
 
 # /v1/api/pay/<fid>
 # data = request.get_json()

@@ -4,9 +4,10 @@ import Hero from "./components/Hero";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import VendorHero from "./components/VendorHero";
 import VendorLogin from "./components/VendorLogin";
 import AuthContextProvider from "./contexts/AuthContext";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute, { ProtectedVendorRoute } from "./ProtectedRoute";
 function App() {
   return (
     <AuthContextProvider>
@@ -23,6 +24,14 @@ function App() {
                 <ProtectedRoute>
                   <Hero />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor"
+              element={
+                <ProtectedVendorRoute>
+                  <VendorHero />
+                </ProtectedVendorRoute>
               }
             />
           </Routes>

@@ -26,6 +26,7 @@ api.add_resource(Register, '/v1/api/Register')
 api.add_resource(Login, '/v1/api/Login')
 api.add_resource(Logout, '/v1/api/Logout')
 api.add_resource(VendorLogin, '/v1/api/VendorLogin')
+api.add_resource(AddVehicle, '/v1/api/AddVehicle')
 
 api.add_resource(BookAStation, '/v1/api/Book/<id>')
 api.add_resource(ShowMyBookings, '/v1/api/myBookings')
@@ -33,6 +34,7 @@ api.add_resource(ShowMyBookings, '/v1/api/myBookings')
 api.add_resource(Payment, '/v1/api/pay/<b_id>')
 
 
+api.add_resource(VerifyBooking, '/v1/api/verifyBooking')
 api.add_resource(AddStation, '/v1/api/addStation')
 api.add_resource(ShowMyStations, '/v1/api/showMyStations')
 api.add_resource(ShowVendorBookings, '/v1/api/showVendorBookings')

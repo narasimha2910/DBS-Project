@@ -1,0 +1,23 @@
+.outer1 {
+    border-radius: 20px;
+    margin-left: 0.7rem;
+    margin-top: 0.7rem;
+    padding:  0.5rem 0 ;
+    background-color: #87e4e9;
+    width: 98%;
+    font-weight: bold;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.h12 {
+    margin-right: 55rem;
+}
+
+.table1 {
+    margin: 2rem 20rem;
+    padding-left: 28px;
+}
+
+.td1 {
+    padding: 0 2rem;
+}

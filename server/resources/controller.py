@@ -1,4 +1,5 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
+from os import stat
 from sqlalchemy import and_, Date, or_
 from models.models import *
 from flask import jsonify, request
@@ -6,6 +7,7 @@ from flask_restful import Resource
 import bcrypt, random, string
 from decorators import authenticate
 from db import db
+from otp import send_otp, verify_otp
 
 
 def errorMessage(error):
@@ -128,6 +130,30 @@ class Logout(Resource):
         resp = jsonify(res)
         return resp
 
+    
+class AddVehicle(Resource):
+    @authenticate
+    def post(seldf, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        data = request.get_json()
+        if "number_plate" not in data.keys():
+            return errorMessage("Number plate is required")
+        else:
+            number_plate = data["number_plate"]
+        if "category_id" not in data.keys():
+            return errorMessage("Category is required")
+        else:
+            category_id = data["category_id"]
+        vehicle = VehicleInfo(number_plate=number_plate, category_id=category_id, user_id=user.id)
+        db.session.add(vehicle)
+        db.session.commit()
+        res["status"] = True
+        res["error"] = ""
+        res["vehicle_id"] = vehicle.number_plate
+        resp = jsonify(res)
+        return resp
+
 
 class BookAStation(Resource):
     @authenticate
@@ -136,21 +162,26 @@ class BookAStation(Resource):
         # user = User.query.filter(id =10)
         print(user)
         res = {}
-        station_check = Stations.query.filter(Stations.id == id).first()
+        station_check = Stations.query.filter(Stations.category_id == id, Stations.is_available == True).first()
         if station_check is None:
-            return errorMessage("No such station exists")
-        booking = Booking(user_id = user.id, station_id = id, status="2")
+            return errorMessage("No station exists")
+        categoryCheck = VehicleInfo.query.filter(and_(VehicleInfo.user_id == user.id, VehicleInfo.category_id == id)).first()
+        if categoryCheck is None:
+            return errorMessage("User does not have vehicle in this category")
+        booking = Booking(user_id = user.id, station_id = station_check.id, status="0") #Ongoing
         # Set is_available = false
         # Book based on category and check if the user has a vehicle in this category
-        # otp = random.choice(string.digits, k=4)
         db.session.add(booking)
+        station_check.is_available = False
         db.session.commit()
+        send_otp(user.phone, user.id, booking.id)
         res["booking_id"] = booking.id
         res["username"] = user.username
         res["error"] = ""
         res["status"] = True
         resp = jsonify(res)
         return resp
+
 
 
 class ShowMyBookings(Resource):
@@ -178,25 +209,33 @@ class Payment(Resource):
     def get(self, b_id, **kwargs):
         user = kwargs["user"]
         res = {}
-        booking_check = Booking.query.filter(Booking.id==b_id).first()
+        booking_check = Booking.query.filter(and_(Booking.id==b_id, Booking.status == "0")).first()
         if not booking_check:
-            return errorMessage("No such booking exist")
-        amount = booking_check.stationid.vendorid.cost_per_kwh
+            return errorMessage("No such booking exist/ Already paid")
+        print(booking_check.start_time)
+        time_delta = datetime.now() - booking_check.start_time
+        time_delta = time_delta.total_seconds()
+        print(time_delta)
+        minutes = time_delta // 60
+        print(minutes)
+        amount = round(booking_check.stationid.vendorid.cost_per_kwh * (minutes))
+        print(amount)
         # check if the same user who booked is paying
         # also check if user has already payed for the booking_id
+        # Make station is_available = True
         state = "success"
         if state == "success":
             payment = Payments(booking_id=b_id, amount=amount, payment_status=state, status_code=0, payment_mode="Online")
             db.session.add(payment)
             db.session.commit()
-            booking_check.status = "0"
+            booking_check.status = "1"
+            booking_check.stationid.is_available = True
             db.session.commit()
             res["error"] = ""
             res["status"] = True
             res["amount"] = amount
             res["status"] = state
             res["payment_id"] = payment.id
-            res["otp"] = random.choices(string.digits, k=4)
             res["username"] = user.username
             resp = jsonify(res)
             return resp
@@ -204,7 +243,8 @@ class Payment(Resource):
             payment = Payments(booking_id=b_id, amount=amount, payment_status=state, status_code=1, payment_mode="Failure")
             db.session.add(payment)
             db.session.commit()
-            booking_check.status = "1"
+            booking_check.status = "2"
+            booking_check.stationid.is_available = True
             db.session.commit()
             res["error"] = ""
             res["status"] = True
@@ -253,6 +293,48 @@ class VendorLogin(Resource):
         res["token"] = token
         resp = jsonify(res)
         return resp
+
+
+class VerifyBooking(Resource):
+    @authenticate
+    def post(self, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        data = request.get_json()
+        if not data:
+            return errorMessage("Invalid Request")
+        if "otp" not in data.keys():
+            return errorMessage("OTP is required")
+        else:
+            otp = int(data["otp"])
+        if "booking_id" not in data.keys():
+            return errorMessage("Booking ID is required")
+        else:
+            booking = data["booking_id"]
+        vendor_check = EVBunk.query.filter(EVBunk.user_id == user.id).first()
+        if vendor_check is None:
+            return errorMessage("User is not a vendor")
+
+        bookingCheck = Booking.query.filter(Booking.id == booking).first()
+        
+        status, wrong_count = verify_otp(otp, bookingCheck.userid.id, bookingCheck.id)
+        if status == "Failure" and wrong_count <= 3:
+            return errorMessage("Wrong OTP")
+        
+        if status == "Failure" and wrong_count > 3:
+            bookingCheck.status = "2"
+            bookingCheck.stationid.is_available = True
+            db.session.commit()
+            return errorMessage("OTP limit exceeded, Booking discarded")
+        
+        if status == "Success" and wrong_count == "success":
+            bookingCheck.start_time = datetime.now()
+            db.session.commit()
+            res["status"] = True
+            res["error"] = ""
+            res["message"] = "Verification Successful"
+            resp = jsonify(res)
+            return resp
 
 
 class AddStation(Resource):
@@ -320,7 +402,10 @@ class ShowVendorBookings(Resource):
                 booking_dict["username"] = booking.userid.username
                 booking_dict["booking_time"] = booking.booking_time
                 payment_id = Payments.query.filter(Payments.booking_id == booking.id).first()
-                booking_dict["payment_id"] = payment_id.id
+                if payment_id is None:
+                    booking_dict["payment_id"] = "Pending"
+                else:    
+                    booking_dict["payment_id"] = payment_id.id
                 booking_list.append(booking_dict)
         res["station_list"] = booking_list
         res["error"] = ""
@@ -348,7 +433,10 @@ class VendorBookingsToday(Resource):
                 booking_dict["username"] = booking.userid.username
                 booking_dict["booking_time"] = booking.booking_time
                 payment_id = Payments.query.filter(Payments.booking_id == booking.id).first()
-                booking_dict["payment_id"] = payment_id.id
+                if payment_id is None:
+                    booking_dict["payment_id"] = "Pending"
+                else:    
+                    booking_dict["payment_id"] = payment_id.id
                 booking_list.append(booking_dict)
         res["station_list"] = booking_list
         res["error"] = ""
@@ -365,18 +453,28 @@ class VendorBookingsThisWeek(Resource):
         vendor_check = EVBunk.query.filter(EVBunk.user_id == user.id).first()
         if vendor_check is None:
             return errorMessage("User is not a vendor")
+
+
+        d = datetime.date(datetime.now()).isocalendar()[1]
+        y = datetime.date(datetime.now()).year
+        r = str(y)+"-W"+str(d)
+        result = datetime.strptime(r + '-1', "%Y-W%W-%w")
+        print(result)
         stations = Stations.query.filter(Stations.vendor_id == vendor_check.id).all()
         booking_list = []
         for station in stations:
             bookings = Booking.query.filter(and_(Booking.station_id == station.id, or_(Booking.status=="0"
-                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.date(datetime.now()) - timedelta(days=7))).all()
+                , Booking.status == "1"), Booking.booking_time.cast(Date) >= result)).all()
             for booking in bookings:
                 booking_dict = {}
                 booking_dict["booking_id"] = booking.id
                 booking_dict["username"] = booking.userid.username
                 booking_dict["booking_time"] = booking.booking_time
                 payment_id = Payments.query.filter(Payments.booking_id == booking.id).first()
-                booking_dict["payment_id"] = payment_id.id
+                if payment_id is None:
+                    booking_dict["payment_id"] = "Pending"
+                else:    
+                    booking_dict["payment_id"] = payment_id.id
                 booking_list.append(booking_dict)
         res["station_list"] = booking_list
         res["error"] = ""
@@ -397,14 +495,17 @@ class VendorBookingsThisMonth(Resource):
         booking_list = []
         for station in stations:
             bookings = Booking.query.filter(and_(Booking.station_id == station.id, or_(Booking.status=="0"
-                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.date(datetime.now()) - timedelta(days=30))).all()
+                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.today().replace(day=1))).all()
             for booking in bookings:
                 booking_dict = {}
                 booking_dict["booking_id"] = booking.id
                 booking_dict["username"] = booking.userid.username
                 booking_dict["booking_time"] = booking.booking_time
                 payment_id = Payments.query.filter(Payments.booking_id == booking.id).first()
-                booking_dict["payment_id"] = payment_id.id
+                if payment_id is None:
+                    booking_dict["payment_id"] = "Pending"
+                else:    
+                    booking_dict["payment_id"] = payment_id.id
                 booking_list.append(booking_dict)
         res["station_list"] = booking_list
         res["error"] = ""
@@ -475,10 +576,15 @@ class MyProfitsThisWeek(Resource):
         if vendor_check is None:
             return errorMessage("User is not a vendor")
         total_sales = 0
+        d = datetime.date(datetime.now()).isocalendar()[1]
+        y = datetime.date(datetime.now()).year
+        r = str(y)+"-W"+str(d)
+        result = datetime.strptime(r + '-1', "%Y-W%W-%w")
+        print(result)
         stations = Stations.query.filter(Stations.vendor_id == vendor_check.id).all()
         for station in stations:
             bookings = Booking.query.filter(and_(Booking.station_id == station.id, or_(Booking.status=="0"
-                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.date(datetime.now()) - timedelta(days=7))).all()
+                , Booking.status == "1"), Booking.booking_time.cast(Date) >= result)).all()
             for booking in bookings:
                 payment = Payments.query.filter(Payments.booking_id == booking.id).first()
                 total_sales += payment.amount
@@ -502,10 +608,11 @@ class MyProfitsThisMonth(Resource):
         if vendor_check is None:
             return errorMessage("User is not a vendor")
         total_sales = 0
+        print(datetime.today().replace(day=1))
         stations = Stations.query.filter(Stations.vendor_id == vendor_check.id).all()
         for station in stations:
             bookings = Booking.query.filter(and_(Booking.station_id == station.id, or_(Booking.status=="0"
-                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.date(datetime.now()) - timedelta(days=30))).all()
+                , Booking.status == "1"), Booking.booking_time.cast(Date) >= datetime.today().replace(day=1))).all()
             for booking in bookings:
                 payment = Payments.query.filter(Payments.booking_id == booking.id).first()
                 total_sales += payment.amount
