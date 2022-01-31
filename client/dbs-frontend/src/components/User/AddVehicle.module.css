@@ -1,0 +1,16 @@
+.icon {
+    background-color: #87e4e9;
+    font-size: 3rem;
+    width: 6rem;
+    /* display: inline-block; */
+    padding: 0rem;
+    margin-left: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.active {
+    box-shadow: none;
+    background-color: #3e969b;
+}

@@ -39,7 +39,6 @@ const AuthContextProvider = ({ children }) => {
       }),
     });
     const res = await data.json();
-    console.log(res);
     if (res.status === true) {
       localStorage.setItem("token", res.token);
       localStorage.setItem("isAuth", true);
@@ -69,7 +68,6 @@ const AuthContextProvider = ({ children }) => {
       }),
     });
     const res = await data.json();
-    console.log(res);
     if (res.status === true) {
       localStorage.setItem("token", res.token);
       localStorage.setItem("isVendorAuth", true);

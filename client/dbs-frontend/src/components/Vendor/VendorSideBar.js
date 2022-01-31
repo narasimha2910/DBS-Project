@@ -8,10 +8,11 @@ import {
   faRupeeSign,
   faExclamationTriangle,
   faPlusCircle,
+  faArrowAltCircleRight
 } from "@fortawesome/free-solid-svg-icons";
 import classes from "./VendorSideBar.module.css";
 const VendorSideBar = ({ setActiveHandler }) => {
-  const [style, setStyle] = useState("c1");
+  const [style, setStyle] = useState("c11");
   return (
     <div className={classes.sidebar}>
       <h2>
@@ -19,6 +20,16 @@ const VendorSideBar = ({ setActiveHandler }) => {
         Menu
       </h2>
       <ul className={classes.sul}>
+        <li
+          className={`${classes.sli} ${style === "c11" && classes.active}`}
+          onClick={() => {
+            setStyle("c11");
+            setActiveHandler(11);
+          }}
+        >
+          <FontAwesomeIcon icon={faArrowAltCircleRight} style={{ paddingRight: "10" }} />
+          Verify OTP
+        </li>
         <li
           className={`${classes.sli} ${style === "c1" && classes.active}`}
           onClick={() => {

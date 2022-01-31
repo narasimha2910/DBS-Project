@@ -1,16 +1,18 @@
-import Content from "./Content";
+import Content from "./User/Content";
 import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+import Sidebar from "./User/Sidebar";
+import { useState } from "react";
 
 const Hero = () => {
+  const [active, setActive] = useState(1);
   return (
     <div>
       {/* NavBar */}
       <Navbar />
       {/* Menu on the left */}
-      <Sidebar />
+      <Sidebar setActive={setActive} />
       {/* Content in the center */}
-      <Content />
+      <Content active={active} />
     </div>
   );
 };

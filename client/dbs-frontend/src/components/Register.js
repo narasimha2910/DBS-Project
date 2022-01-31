@@ -18,7 +18,6 @@ const register = async (name, password, username, phone, email, profileurl) => {
     }),
   });
   const res = await data.json();
-  console.log(res);
   if (res.status === true) {
     return true;
   } else if (res.status === false) {
@@ -39,7 +38,6 @@ const Register = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     const resul = await register(name, password, username, phone, email, profileurl);
-    console.log(resul);
     setResult(resul);
   };
 

@@ -40,7 +40,6 @@ const VendorStations = () => {
       .then((res) => {
         if (res.status === true) {
           setStations(res.station_list);
-          console.log("render");
         } else {
           alert(res.error);
         }

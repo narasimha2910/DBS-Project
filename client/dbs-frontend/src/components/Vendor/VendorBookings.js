@@ -15,7 +15,6 @@ const VendorBookings = () => {
       .then((res) => {
         if (res.status === true) {
           setBookings(res.station_list);
-          console.log(res);
         }
       });
   }, []);
