@@ -118,7 +118,6 @@ const ProfitDaily = () => {
       .then((data) => data.json())
       .then((res) => {
         if (res.status === true) {
-          console.log(res);
           setProfit(res);
         }
       });

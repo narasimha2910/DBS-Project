@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import classes from "./VendorLogin.module.css";
 import { Navigate } from "react-router-dom";
 

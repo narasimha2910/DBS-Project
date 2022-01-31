@@ -157,12 +157,15 @@ class AddVehicle(Resource):
 
 class BookAStation(Resource):
     @authenticate
-    def get(self, id, **kwargs):
+    def get(self, id, vendor_id , **kwargs):
         user = kwargs["user"]
         # user = User.query.filter(id =10)
         print(user)
         res = {}
-        station_check = Stations.query.filter(Stations.category_id == id, Stations.is_available == True).first()
+        booking_check = Booking.query.filter(and_(Booking.user_id == user.id, Booking.status == "0")).first()
+        if(booking_check):
+            return errorMessage("You have already booked a station. Complete that to book again")
+        station_check = Stations.query.filter(Stations.category_id == id, Stations.is_available == True, Stations.vendor_id == vendor_id).first()
         if station_check is None:
             return errorMessage("No station exists")
         categoryCheck = VehicleInfo.query.filter(and_(VehicleInfo.user_id == user.id, VehicleInfo.category_id == id)).first()
@@ -176,6 +179,7 @@ class BookAStation(Resource):
         db.session.commit()
         send_otp(user.phone, user.id, booking.id)
         res["booking_id"] = booking.id
+        res["station_id"] = booking.station_id
         res["username"] = user.username
         res["error"] = ""
         res["status"] = True
@@ -193,9 +197,17 @@ class ShowMyBookings(Resource):
         booking_list = []
         for booking in bookings:
             book_dict = {}
-            book_dict["station_id"] = booking.station_id
-            bunk_name = EVBunk.query.filter(EVBunk.id == booking.stationid.vendor_id).first()
-            book_dict["ev_bunk"] = bunk_name.name
+            book_dict["b_id"] = booking.id
+            book_dict["time"] = booking.booking_time
+            book_dict["stime"] = booking.start_time
+            bunk_name = booking.stationid.vendorid.name
+            book_dict["ev_bunk"] = bunk_name
+            if booking.status == "0":
+                book_dict["status"] = "Ongoing"
+            elif booking.status == "1":
+                book_dict["status"] = "Completed"
+            else:
+                book_dict["status"] = "Discarded"
             booking_list.append(book_dict)
         res["booking_list"] = booking_list
         res["error"] = ""
@@ -315,7 +327,9 @@ class VerifyBooking(Resource):
         if vendor_check is None:
             return errorMessage("User is not a vendor")
 
-        bookingCheck = Booking.query.filter(Booking.id == booking).first()
+        bookingCheck = Booking.query.filter(and_(Booking.id == booking, or_(Booking.status!="2", Booking.status=="1"))).first()
+        if not bookingCheck:
+            return errorMessage("Booking does not exist")
         
         status, wrong_count = verify_otp(otp, bookingCheck.userid.id, bookingCheck.id)
         if status == "Failure" and wrong_count <= 3:
@@ -625,4 +639,93 @@ class MyProfitsThisMonth(Resource):
         res["status"] = True
         resp = jsonify(res)
         return resp
+
+class ShowAvailableStations(Resource):
+    @authenticate
+    def get(self, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        vendor_list = []
+        vendors = EVBunk.query.filter().all()
+        if vendors:
+            for vendor in vendors:
+                vendor_dict = {}
+                vendor_dict["vendor_id"] = vendor.id
+                vendor_dict["vendor_name"] = vendor.name
+                vendor_dict["latitude"] = vendor.latitude
+                vendor_dict["longitude"] = vendor.longitude
+                # vendor_dict["rating"] = vendor.rating
+                stations_4 = Stations.query.filter(and_(Stations.vendor_id==vendor.id, Stations.is_available==True, Stations.category_id==1)).all()
+                vendor_dict["f_wheeler"] = len(stations_4)
+                stations_2 = Stations.query.filter(and_(Stations.vendor_id==vendor.id, Stations.is_available==True, Stations.category_id==2)).all()
+                vendor_dict["t_wheeler"] = len(stations_2)
+                vendor_list.append(vendor_dict)
+        res["vendors_list"] = vendor_list
+        res["error"] = ""
+        res["status"] = True
+        resp = jsonify(res)
+        return resp
+
+class OngoingBooking(Resource):
+    @authenticate
+    def get(self, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        booking = Booking.query.filter(and_(Booking.user_id == user.id, Booking.status == "0")).first()
+        if not booking:
+            return errorMessage("No ongoing bookings")
+        res["booking_id"] = booking.id
+        res["start_time"] = booking.start_time
+        res["booking_time"] = booking.booking_time
+        res["station_id"] = booking.station_id
+        res["error"] = ""
+        res["status"] = True
+        resp = jsonify(res)
+        return resp
+
+class PaymentHistory(Resource):
+    @authenticate
+    def get(self, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        payments_list = []
+        bookings = Booking.query.filter(Booking.user_id == user.id)
+        if not bookings:
+            return errorMessage("No payments to show")
+        for booking in bookings:
+            payment = Payments.query.filter(and_(Payments.booking_id == booking.id)).first()
+            payment_dic = {}
+            payment_dic["payment_id"] = payment.id
+            payment_dic["payment_status"] = payment.payment_status
+            payment_dic["vendor_name"] = payment.bookingid.stationid.vendorid.name
+            payment_dic["payment_time"] = payment.payment_time
+            payments_list.append(payment_dic)
+        res["payments_list"] = payments_list
+        res["error"] = ""
+        res["status"] = True
+        resp = jsonify(res)
+        return resp
+
+class VehicleData(Resource):
+    @authenticate
+    def get(self, **kwargs):
+        user = kwargs["user"]
+        res = {}
+        vehicle_list = []
+        vehicles = VehicleInfo.query.filter(VehicleInfo.user_id == user.id).all()
+        for vehicle in vehicles:
+            vehicle_dic = {}
+            vehicle_dic["plate"] = vehicle.number_plate
+            if(vehicle.category_id == 1):
+                vehicle_dic["cat"] = "Four Wheeler"
+            else:
+                vehicle_dic["cat"] = "Two Wheeler"
+            vehicle_list.append(vehicle_dic)
+        res["vehicle_list"] = vehicle_list
+        res["error"] = ""
+        res["status"] = True
+        resp = jsonify(res)
+        return resp
+
+
 # Make an api where the user can click on a button in order to make the station available

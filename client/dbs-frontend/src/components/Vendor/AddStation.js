@@ -17,7 +17,6 @@ const AddStation = () => {
         }),
       });
       const res = await data.json();
-      console.log(res);
       if (res.status === true) {
         alert(
           category === 1 ? "Car station added" : "Motorcycle station Added"
@@ -26,7 +25,6 @@ const AddStation = () => {
         alert(res.error);
       }
     } catch (Err) {
-      console.log(Err);
     }
   };
 

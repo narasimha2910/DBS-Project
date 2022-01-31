@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import classes from "./Navbar.module.css";
+import { AuthContext } from "../../contexts/AuthContext";
+import classes from "../Navbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChargingStation,
@@ -20,7 +20,7 @@ const VendorNavBar = () => {
       </div>
       <div className={classes.links}>
         <ul className={classes.nul}>
-          <li className={classes.nli} onClick={() => console.log("success")}>
+          <li className={classes.nli}>
             <FontAwesomeIcon icon={faUser} style={{ paddingRight: "10" }} />
             Profile
           </li>

@@ -20,7 +20,7 @@ const Navbar = () => {
       </div>
       <div className={classes.links}>
         <ul className={classes.nul}>
-          <li className={classes.nli} onClick={() => console.log("success")}>
+          <li className={classes.nli} >
             <FontAwesomeIcon icon={faUser} style={{ paddingRight: "10" }} />
             Profile
           </li>

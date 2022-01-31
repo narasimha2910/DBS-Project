@@ -4,8 +4,8 @@ import Hero from "./components/Hero";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import VendorHero from "./components/VendorHero";
-import VendorLogin from "./components/VendorLogin";
+import VendorHero from "./components/Vendor/VendorHero";
+import VendorLogin from "./components/Vendor/VendorLogin";
 import AuthContextProvider from "./contexts/AuthContext";
 import ProtectedRoute, { ProtectedVendorRoute } from "./ProtectedRoute";
 function App() {
