@@ -11,12 +11,10 @@ const AuthContextProvider = ({ children }) => {
     if (isAuth) {
       setAuthenticated(true);
       return "user";
-    }
-    else if (isVendorAuth){
+    } else if (isVendorAuth) {
       setAuthenticated(true);
       return "vendor";
-    }
-     else {
+    } else {
       setAuthenticated(false);
     }
   };

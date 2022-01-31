@@ -539,7 +539,7 @@ class MyProfits(Resource):
         total_sales = 0
         stations = Stations.query.filter(Stations.vendor_id == vendor_check.id).all()
         for station in stations:
-            bookings = Booking.query.filter(Booking.station_id == station.id).all()
+            bookings = Booking.query.filter(and_(Booking.station_id == station.id, Booking.status == "1")).all()
             for booking in bookings:
                 payment = Payments.query.filter(Payments.booking_id == booking.id).first()
                 total_sales += payment.amount
@@ -565,8 +565,8 @@ class MyProfitsToday(Resource):
         total_sales = 0
         stations = Stations.query.filter(Stations.vendor_id == vendor_check.id).all()
         for station in stations:
-            bookings = Booking.query.filter(and_(Booking.station_id == station.id, or_(Booking.status=="0"
-                , Booking.status == "1"), Booking.booking_time.cast(Date) == datetime.date(datetime.now()))).all()
+            bookings = Booking.query.filter(and_(Booking.station_id == station.id, 
+                 Booking.status == "1", Booking.booking_time.cast(Date) == datetime.date(datetime.now()))).all()
             for booking in bookings:
                 payment = Payments.query.filter(Payments.booking_id == booking.id).first()
                 total_sales += payment.amount

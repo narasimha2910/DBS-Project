@@ -6,9 +6,9 @@ const Profits = () => {
     <div className={classes.outer1}>
       <div>
         <ProfitDaily />
-        <ProfitWeekly />
+        <ProfitWeekly  />
         <ProfitMonthly />
-        <ProfitAllTime />
+        <ProfitAllTime  />
       </div>
     </div>
   );
@@ -46,13 +46,13 @@ const ProfitAllTime = () => {
         <tbody>
           <tr>
             <td className={classes.td1}>
-              ₹ {Number(profit.total_sales).toFixed(2)}
+              ₹ {Number(profit.total_sales || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.commission).toFixed(2)}
+              ₹ {Number(profit.commission || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.profit).toFixed(2)}
+              ₹ {Number(profit.profit || 0.0).toFixed(2)}
             </td>
           </tr>
         </tbody>
@@ -91,13 +91,13 @@ const ProfitWeekly = () => {
         <tbody>
           <tr>
             <td className={classes.td1}>
-              ₹ {Number(profit.total_sales).toFixed(2)}
+              ₹ {Number(profit.total_sales || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.commission).toFixed(2)}
+              ₹ {Number(profit.commission || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.profit).toFixed(2)}
+              ₹ {Number(profit.profit || 0.0).toFixed(2)}
             </td>
           </tr>
         </tbody>
@@ -136,13 +136,13 @@ const ProfitDaily = () => {
         <tbody>
           <tr>
             <td className={classes.td1}>
-              ₹ {Number(profit.total_sales).toFixed(2)}
+              ₹ {Number(profit.total_sales || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.commission).toFixed(2)}
+              ₹ {Number(profit.commission || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.profit).toFixed(2)}
+              ₹ {Number(profit.profit || 0.0).toFixed(2)}
             </td>
           </tr>
         </tbody>
@@ -181,13 +181,13 @@ const ProfitMonthly = () => {
         <tbody>
           <tr>
             <td className={classes.td1}>
-              ₹ {Number(profit.total_sales).toFixed(2)}
+              ₹ {Number(profit.total_sales || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.commission).toFixed(2)}
+              ₹ {Number(profit.commission || 0.0).toFixed(2)}
             </td>
             <td className={classes.td1}>
-              ₹ {Number(profit.profit).toFixed(2)}
+              ₹ {Number(profit.profit || 0.0).toFixed(2)}
             </td>
           </tr>
         </tbody>

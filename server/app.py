@@ -4,9 +4,10 @@ from resources.controller import *
 from models.models import *
 
 # Initializing the flask app
+CLOUD_URI = "postgresql://vcihgjdpdpnlli:7afb0b7a012966e1cf16d5605000d78355ede8bc3bbd84f47f34a85beb24a48f@ec2-54-173-31-84.compute-1.amazonaws.com:5432/deftg4u9b8f9pu"
 app = Flask(__name__)
 api = Api(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:''@localhost/dbs_proj"
+app.config["SQLALCHEMY_DATABASE_URI"] = CLOUD_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 @app.route("/create_tables")

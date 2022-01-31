@@ -7,6 +7,7 @@ import {
   faPowerOff,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { Navigate } from "react-router-dom";
 
 const Navbar = () => {
   const { logout } = useContext(AuthContext);
@@ -20,14 +21,17 @@ const Navbar = () => {
       </div>
       <div className={classes.links}>
         <ul className={classes.nul}>
-          <li className={classes.nli} >
+          <li className={classes.nli}>
             <FontAwesomeIcon icon={faUser} style={{ paddingRight: "10" }} />
             Profile
           </li>
           <li
             className={classes.nli}
             onClick={() => {
-              logout();
+              const status = logout();
+              if (status) {
+                <Navigate to="/" />;
+              }
             }}
           >
             <FontAwesomeIcon icon={faPowerOff} style={{ paddingRight: "10" }} />
